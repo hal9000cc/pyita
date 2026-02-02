@@ -12,9 +12,21 @@ Example:
 import importlib
 
 from .quotes import Quotes
+from .exceptions import (
+    PyTAException,
+    PyTAExceptionIndicatorNotFound,
+    PyTAExceptionBadParameterValue,
+    PyTAExceptionBadSeriesData,
+)
 
 __version__ = "0.1.0"
-__all__ = ['Quotes']
+__all__ = [
+    'Quotes',
+    'PyTAException',
+    'PyTAExceptionIndicatorNotFound',
+    'PyTAExceptionBadParameterValue',
+    'PyTAExceptionBadSeriesData',
+]
 
 # Cache for lazy-loaded indicators
 _indicator_cache = {}
@@ -35,8 +47,12 @@ def __getattr__(name):
         The get_indicator_out function from the indicator module
         
     Raises:
-        AttributeError: If the indicator module or function is not found
+        PyTAExceptionIndicatorNotFound: If the indicator module or function is not found
     """
+    # Skip special Python attributes (dunder attributes)
+    if name.startswith('__') and name.endswith('__'):
+        raise AttributeError(f"module '{__name__}' has no attribute '{name}'")
+    
     # Check cache first
     if name in _indicator_cache:
         return _indicator_cache[name]
@@ -48,10 +64,7 @@ def __getattr__(name):
         _indicator_cache[name] = func
         return func
     except (ImportError, AttributeError) as e:
-        raise AttributeError(
-            f"module '{__name__}' has no attribute '{name}'. "
-            f"Make sure the indicator '{name}' exists in the indicators directory."
-        ) from e
+        raise PyTAExceptionIndicatorNotFound(name) from e
 
 
 def __dir__():

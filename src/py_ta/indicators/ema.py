@@ -1,7 +1,8 @@
 """ema(quotes, period, value='close')
 Exponential moving average."""
-import numpy as np
 from ..core import DataSeries
+from ..move_average import ma_calculate, MA_Type
+from ..exceptions import PyTAExceptionBadParameterValue
 
 
 def get_indicator_out(quotes, period, value='close'):
@@ -18,19 +19,31 @@ def get_indicator_out(quotes, period, value='close'):
         DataSeries object with attribute:
             - ema: Exponential moving average values
             
+    Raises:
+        PyTAExceptionBadParameterValue: If period <= 0 or value is not a valid price field
+        PyTAExceptionTooLittleData: If data length is less than period
+        
     Example:
         >>> ema_result = ema(quotes, period=12, value='close')
         >>> print(ema_result.ema)
     """
-    # TODO: Implementation will be added later
-    # For now, return a placeholder structure
+    # Validate period
+    if period <= 0:
+        raise PyTAExceptionBadParameterValue(f'period must be greater than 0, got {period}')
+    
+    # Validate value
+    valid_values = ['open', 'high', 'low', 'close']
+    if value not in valid_values:
+        raise PyTAExceptionBadParameterValue(f'value must be one of {valid_values}, got {value}')
     
     # Get source values from quotes
-    source_values = getattr(quotes, value)
-    length = len(source_values)
+    try:
+        source_values = getattr(quotes, value)
+    except AttributeError:
+        raise PyTAExceptionBadParameterValue(f'Quotes object does not have attribute "{value}"')
     
-    # Placeholder array (will be replaced with actual calculation)
-    ema_values = np.full(length, np.nan)
+    # Calculate EMA
+    ema_values = ma_calculate(source_values, period, MA_Type.ema)
     
     return DataSeries({
         'ema': ema_values
