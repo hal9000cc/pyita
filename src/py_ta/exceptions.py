@@ -85,3 +85,23 @@ class PyTAExceptionTooLittleData(PyTAException):
         self.reason = reason
         super().__init__(f'Too little data: {reason}')
 
+
+class PyTAExceptionDataSeriesNonFound(PyTAException):
+    """Raised when a required data series is not found.
+    
+    This exception is raised when an indicator or function requires a data series
+    (e.g., volume, time) that is not present in the Quotes object.
+    
+    Attributes:
+        series_name: Name of the data series that was not found
+    """
+    
+    def __init__(self, series_name):
+        """Initialize the exception.
+        
+        Args:
+            series_name: Name of the data series that was not found
+        """
+        self.series_name = series_name
+        super().__init__(f'Data series "{self.series_name}" not found.')
+

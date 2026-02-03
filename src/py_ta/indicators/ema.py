@@ -21,6 +21,7 @@ def get_indicator_out(quotes, period, value='close'):
             
     Raises:
         PyTAExceptionBadParameterValue: If period <= 0 or value is not a valid price field
+        PyTAExceptionDataSeriesNonFound: If the specified value series is not found
         PyTAExceptionTooLittleData: If data length is less than period
         
     Example:
@@ -37,10 +38,7 @@ def get_indicator_out(quotes, period, value='close'):
         raise PyTAExceptionBadParameterValue(f'value must be one of {valid_values}, got {value}')
     
     # Get source values from quotes
-    try:
-        source_values = getattr(quotes, value)
-    except AttributeError:
-        raise PyTAExceptionBadParameterValue(f'Quotes object does not have attribute "{value}"')
+    source_values = quotes[value]
     
     # Calculate EMA
     ema_values = ma_calculate(source_values, period, MA_Type.ema)

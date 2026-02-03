@@ -51,6 +51,7 @@ def get_indicator_out(quotes, period=20, deviation=2, ma_type='sma', value='clos
             
     Raises:
         PyTAExceptionBadParameterValue: If parameters are invalid
+        PyTAExceptionDataSeriesNonFound: If the specified value series is not found
         PyTAExceptionTooLittleData: If data length is insufficient
         
     Example:
@@ -73,10 +74,7 @@ def get_indicator_out(quotes, period=20, deviation=2, ma_type='sma', value='clos
         raise PyTAExceptionBadParameterValue(f'value must be one of {valid_values}, got {value}')
     
     # Get source values from quotes
-    try:
-        source_values = getattr(quotes, value)
-    except AttributeError:
-        raise PyTAExceptionBadParameterValue(f'Quotes object does not have attribute "{value}"')
+    source_values = quotes[value]
     
     # Convert ma_type string to MA_Type enum (will raise ValueError if invalid)
     try:

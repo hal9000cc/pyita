@@ -5,7 +5,7 @@ from datetime import date, datetime
 import numpy as np
 import pandas as pd
 
-from .exceptions import PyTAExceptionBadParameterValue, PyTAExceptionBadSeriesData
+from .exceptions import PyTAExceptionBadParameterValue, PyTAExceptionBadSeriesData, PyTAExceptionDataSeriesNonFound
 
 
 class DataSeries(abc.ABC):
@@ -245,6 +245,22 @@ class DataSeries(abc.ABC):
                 lengths = {col: len(self._data[col]) for col in all_columns}
                 length_details = ', '.join([f"{col}={length}" for col, length in lengths.items()])
                 raise PyTAExceptionBadSeriesData(f"Arrays have different lengths: {length_details}")
+    
+    def __getitem__(self, key):
+        """Get data series by key using bracket notation.
+        
+        Args:
+            key: Series name (e.g., 'open', 'close', 'volume')
+            
+        Returns:
+            Value from internal dictionary
+            
+        Raises:
+            PyTAExceptionDataSeriesNonFound: If series not found
+        """
+        if key not in self._data:
+            raise PyTAExceptionDataSeriesNonFound(key)
+        return self._data[key]
     
     def __getattr__(self, name):
         """Get attribute from internal data dictionary.

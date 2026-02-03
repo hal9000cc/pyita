@@ -17,6 +17,7 @@ from .exceptions import (
     PyTAExceptionIndicatorNotFound,
     PyTAExceptionBadParameterValue,
     PyTAExceptionBadSeriesData,
+    PyTAExceptionDataSeriesNonFound,
 )
 
 __version__ = "0.1.0"
@@ -26,6 +27,7 @@ __all__ = [
     'PyTAExceptionIndicatorNotFound',
     'PyTAExceptionBadParameterValue',
     'PyTAExceptionBadSeriesData',
+    'PyTAExceptionDataSeriesNonFound',
 ]
 
 # Cache for lazy-loaded indicators
