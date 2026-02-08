@@ -1,5 +1,9 @@
 # py-ta
 
+![PyPI - Version](https://img.shields.io/pypi/v/py-ta)
+![PyPI - License](https://img.shields.io/pypi/l/py-ta)
+![Python Version from PEP 621 TOML](https://img.shields.io/python/required-version-toml?projectUrl=https://github.com/hal9000cc/py_ta)
+
 Fast and simple technical analysis library for Python.
 
 ## Features
