@@ -1,6 +1,6 @@
 #!/bin/bash
-# Activate the py-ta virtual environment
+# Activate the pyita virtual environment
 source venv/bin/activate
 echo "✓ Virtual environment activated"
 echo "Python: $(python --version)"
-echo "py-ta version: $(python -c 'import py_ta; print(py_ta.__version__)')"
+echo "pyita version: $(python -c 'import pyita; print(pyita.__version__)')"

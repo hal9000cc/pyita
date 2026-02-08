@@ -1,8 +1,8 @@
-"""Custom exceptions for py-ta library."""
+"""Custom exceptions for pyita library."""
 
 
 class PyTAException(Exception):
-    """Base exception class for all py-ta errors."""
+    """Base exception class for all pyita errors."""
     pass
 
 

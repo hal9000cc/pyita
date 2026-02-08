@@ -7,8 +7,8 @@ import numpy as np
 import pandas as pd
 import pytest
 
-import py_ta as ta
-from py_ta.exceptions import PyTAExceptionBadSeriesData
+import pyita as ta
+from pyita.exceptions import PyTAExceptionBadSeriesData
 
 
 # Test data filenames

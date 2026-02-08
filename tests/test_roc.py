@@ -1,7 +1,7 @@
 """Tests for ROC indicator."""
 import numpy as np
 import pytest
-import py_ta as ta
+import pyita as ta
 import talib
 
 from conftest import arrays_equal_with_nan
@@ -14,7 +14,7 @@ def test_roc_vs_talib(test_ohlcv_data, period):
     This test:
     1. Loads test OHLCV data
     2. Creates Quotes object
-    3. Calculates ROC using py-ta
+    3. Calculates ROC using pyita
     4. Calculates ROC using TA-Lib
     5. Compares results with tolerance
     
@@ -36,7 +36,7 @@ def test_roc_vs_talib(test_ohlcv_data, period):
     # Create Quotes
     quotes = ta.Quotes(open_data, high_data, low_data, close_data, volume_data)
     
-    # Calculate with py-ta (using default ma_period=period, ma_type='sma')
+    # Calculate with pyita (using default ma_period=period, ma_type='sma')
     roc_result = ta.roc(quotes, period=period, ma_period=period, ma_type='sma', value='close')
     
     # Calculate with TA-Lib

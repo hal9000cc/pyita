@@ -1,4 +1,4 @@
-"""Core data structures for py-ta."""
+"""Core data structures for pyita."""
 import abc
 from datetime import date, datetime
 

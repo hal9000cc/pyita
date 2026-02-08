@@ -1,7 +1,7 @@
 """Tests for MA indicator."""
 import numpy as np
 import pytest
-import py_ta as ta
+import pyita as ta
 import talib
 
 from conftest import arrays_equal_with_nan
@@ -294,7 +294,7 @@ def test_ma_emaw_vs_talib(test_ohlcv_data, period):
     This test:
     1. Loads test OHLCV data
     2. Creates Quotes object
-    3. Calculates EMA with warm-up using py-ta (ma_type='emaw')
+    3. Calculates EMA with warm-up using pyita (ma_type='emaw')
     4. Calculates EMA using TA-Lib (which uses warm-up method)
     5. Compares results
     
@@ -315,7 +315,7 @@ def test_ma_emaw_vs_talib(test_ohlcv_data, period):
     # Create Quotes
     quotes = ta.Quotes(open_data, high_data, low_data, close_data, volume_data)
     
-    # Calculate with py-ta
+    # Calculate with pyita
     ma_result = ta.ma(quotes, period=period, value='close', ma_type='emaw')
     
     # Calculate with TA-Lib

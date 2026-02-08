@@ -1,10 +1,10 @@
 """Tests for Volume Oscillator indicator."""
 import numpy as np
 import pytest
-import py_ta as ta
+import pyita as ta
 
 from conftest import arrays_equal_with_nan
-from py_ta.move_average import ma_calculate, MA_Type
+from pyita.move_average import ma_calculate, MA_Type
 
 
 @pytest.mark.parametrize('period_short', [
@@ -20,7 +20,7 @@ def test_volume_osc_direct_calculation(test_ohlcv_data, period_short):
     This test:
     1. Loads test OHLCV data
     2. Creates Quotes object
-    3. Calculates Volume Oscillator using py-ta
+    3. Calculates Volume Oscillator using pyita
     4. Verifies that Volume Oscillator values match direct calculation:
        - vol_short = MA(volume, period_short)
        - vol_long = MA(volume, period_long)
@@ -46,7 +46,7 @@ def test_volume_osc_direct_calculation(test_ohlcv_data, period_short):
     # Create Quotes
     quotes = ta.Quotes(open_data, high_data, low_data, close_data, volume_data)
     
-    # Calculate with py-ta
+    # Calculate with pyita
     vosc_result = ta.volume_osc(quotes, period_short=period_short, period_long=period_long, ma_type='ema')
     
     # Calculate expected values by direct computation

@@ -1,7 +1,7 @@
 """Tests for ADL indicator."""
 import numpy as np
 import pytest
-import py_ta as ta
+import pyita as ta
 import talib
 
 from conftest import arrays_equal_with_nan
@@ -14,7 +14,7 @@ def test_adl_vs_talib(test_ohlcv_data, ma_period):
     This test:
     1. Loads test OHLCV data
     2. Creates Quotes object
-    3. Calculates ADL using py-ta
+    3. Calculates ADL using pyita
     4. Calculates ADL using TA-Lib
     5. Compares results with tolerance
     
@@ -37,7 +37,7 @@ def test_adl_vs_talib(test_ohlcv_data, ma_period):
     # Create Quotes
     quotes = ta.Quotes(open_data, high_data, low_data, close_data, volume_data)
     
-    # Calculate with py-ta (without smoothing first, to compare base ADL)
+    # Calculate with pyita (without smoothing first, to compare base ADL)
     adl_result = ta.adl(quotes, ma_period=None)
     
     # Calculate with TA-Lib
@@ -71,7 +71,7 @@ def test_adl_smooth(test_ohlcv_data, ma_period):
     # Create Quotes
     quotes = ta.Quotes(open_data, high_data, low_data, close_data, volume_data)
     
-    # Calculate with py-ta (with smoothing)
+    # Calculate with pyita (with smoothing)
     adl_result = ta.adl(quotes, ma_period=ma_period, ma_type='sma')
     
     # Verify that both adl and adl_smooth are present

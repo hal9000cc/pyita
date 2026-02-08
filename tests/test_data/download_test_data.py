@@ -2,7 +2,7 @@
 """Script for downloading test OHLCV data from cryptocurrency exchanges via CCXT.
 
 This script downloads historical OHLCV data and saves it as a pickle file
-for use in testing py-ta library.
+for use in testing pyita library.
 
 Usage:
     python download_test_data.py [--source SOURCE] [--symbol SYMBOL] 

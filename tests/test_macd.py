@@ -1,7 +1,7 @@
 """Tests for MACD indicator."""
 import numpy as np
 import pytest
-import py_ta as ta
+import pyita as ta
 import talib
 
 from conftest import arrays_equal_with_nan
@@ -19,7 +19,7 @@ def test_macd_vs_talib(test_ohlcv_data, period_short, period_long, period_signal
     This test:
     1. Loads test OHLCV data
     2. Creates Quotes object
-    3. Calculates MACD using py-ta
+    3. Calculates MACD using pyita
     4. Calculates MACD using TA-Lib
     5. Compares results with tolerance
     
@@ -42,7 +42,7 @@ def test_macd_vs_talib(test_ohlcv_data, period_short, period_long, period_signal
     # Create Quotes
     quotes = ta.Quotes(open_data, high_data, low_data, close_data, volume_data)
     
-    # Calculate with py-ta (using default ma_type='ema', ma_type_signal='sma')
+    # Calculate with pyita (using default ma_type='ema', ma_type_signal='sma')
     macd_result = ta.macd(quotes, period_short=period_short, period_long=period_long, 
                           period_signal=period_signal, ma_type='sma', ma_type_signal='emaw', value='close')
     

@@ -1,18 +1,18 @@
-"""Helpers for converting data between py_ta and stock-indicators formats."""
+"""Helpers for converting data between pyita and stock-indicators formats."""
 import pickle
 from pathlib import Path
 
 import numpy as np
-from py_ta.indicator_result import IndicatorResult
+from pyita.indicator_result import IndicatorResult
 
 TEST_DATA_DIR = Path(__file__).parent / 'test_data'
 
 
 def quotes_to_si(quotes):
-    """Convert py_ta Quotes object to list of stock-indicators Quote objects.
+    """Convert pyita Quotes object to list of stock-indicators Quote objects.
 
     Args:
-        quotes: py_ta Quotes object with .open, .high, .low, .close,
+        quotes: pyita Quotes object with .open, .high, .low, .close,
                 .time, .volume attributes (numpy arrays)
 
     Returns:

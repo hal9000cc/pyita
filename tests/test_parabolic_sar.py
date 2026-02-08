@@ -1,7 +1,7 @@
 """Tests for Parabolic SAR indicator."""
 import numpy as np
 import pytest
-import py_ta as ta
+import pyita as ta
 
 from conftest import TEST_DATA_FILENAME, arrays_equal_with_nan
 from stock_indicators_helpers import get_si_ref

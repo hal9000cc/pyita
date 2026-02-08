@@ -1,4 +1,4 @@
-"""Constants for data types used in py-ta."""
+"""Constants for data types used in pyita."""
 import numpy as np
 
 PRICE_TYPE = float

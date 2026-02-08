@@ -1,4 +1,4 @@
-"""Pytest configuration and shared fixtures for py-ta tests."""
+"""Pytest configuration and shared fixtures for pyita tests."""
 import os
 import pickle
 from pathlib import Path

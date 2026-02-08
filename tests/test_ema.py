@@ -1,7 +1,7 @@
 """Tests for EMA indicator."""
 import numpy as np
 import pytest
-import py_ta as ta
+import pyita as ta
 
 from conftest import arrays_equal_with_nan
 
@@ -13,7 +13,7 @@ def test_ema_direct_calculation(test_ohlcv_data, period):
     This test:
     1. Loads test OHLCV data
     2. Creates Quotes object
-    3. Calculates EMA using py-ta
+    3. Calculates EMA using pyita
     4. Verifies that EMA values match direct calculation:
        - alpha = 2.0 / (period + 1)
        - First value (at index period-1) is SMA of first period elements
@@ -36,7 +36,7 @@ def test_ema_direct_calculation(test_ohlcv_data, period):
     # Create Quotes
     quotes = ta.Quotes(open_data, high_data, low_data, close_data, volume_data)
     
-    # Calculate with py-ta
+    # Calculate with pyita
     ema_result = ta.ema(quotes, period=period, value='close')
     
     # Get values

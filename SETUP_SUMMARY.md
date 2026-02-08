@@ -24,7 +24,7 @@
 ### 4. Code Structure
 
 ```
-src/py_ta/
+src/pyita/
 ├── __init__.py              # Lazy loading with __getattr__ and caching
 ├── constants.py             # Data types (PRICE_TYPE, TIME_TYPE, etc.)
 ├── core.py                  # DataSeries class (dict with attribute access)
@@ -69,7 +69,7 @@ src/py_ta/
 ### 6. API Usage Examples
 
 ```python
-import py_ta as ta
+import pyita as ta
 import numpy as np
 
 # Create quotes
@@ -108,9 +108,9 @@ print(ema.ema)
 
 Package installed successfully in development mode:
 ```bash
-cd /home/hal/Projects/py_ta
+cd /home/hal/Projects/pyita
 source venv/bin/activate
-python -c "import py_ta as ta; print(ta.__version__)"
+python -c "import pyita as ta; print(ta.__version__)"
 # Output: 0.1.0
 ```
 

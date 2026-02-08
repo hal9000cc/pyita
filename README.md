@@ -1,8 +1,8 @@
-# py-ta
+# pyita
 
-![PyPI - Version](https://img.shields.io/pypi/v/py-ta)
-![PyPI - License](https://img.shields.io/pypi/l/py-ta)
-![Python Version from PEP 621 TOML](https://img.shields.io/python/required-version-toml?projectUrl=https://github.com/hal9000cc/py_ta)
+![PyPI - Version](https://img.shields.io/pypi/v/pyita)
+![PyPI - License](https://img.shields.io/pypi/l/pyita)
+![Python Version from PEP 621 TOML](https://img.shields.io/python/required-version-toml?projectUrl=https://github.com/hal9000cc/pyita)
 
 Fast and simple technical analysis library for Python.
 
@@ -22,14 +22,14 @@ Fast and simple technical analysis library for Python.
 From PyPI:
 
 ```bash
-pip install py-ta
+pip install pyita
 ```
 
 From source:
 
 ```bash
-git clone https://github.com/hal9000cc/py_ta.git
-cd py_ta
+git clone https://github.com/hal9000cc/pyita.git
+cd pyita
 pip install -e .
 ```
 
@@ -38,7 +38,7 @@ pip install -e .
 **From NumPy arrays:**
 
 ```python
-import py_ta as ta
+import pyita as ta
 import numpy as np
 
 # Create quotes from arrays
@@ -58,7 +58,7 @@ print(sma.sma)  # [nan, nan, 102.0, 103.0]
 
 ```python
 import pandas as pd
-import py_ta as ta
+import pyita as ta
 
 # Load data from CSV
 df = pd.read_csv('data.csv')
@@ -75,7 +75,7 @@ print(bb.down_line)  # Lower band
 
 ```python
 import ccxt
-import py_ta as ta
+import pyita as ta
 
 # Fetch data from exchange
 exchange = ccxt.binance()
@@ -95,7 +95,7 @@ The `Quotes` object encapsulates OHLCV data and can be created from various sour
 
 ```python
 import numpy as np
-import py_ta as ta
+import pyita as ta
 
 quotes = ta.Quotes(
     open=np.array([100.0, 102.0, 101.0]),
@@ -327,7 +327,7 @@ Many indicators support selecting the moving average type via the `ma_type` para
 
 - **`mmaw`** - MMA with dynamic warmup period (TA-Lib compatible)
 
-Essentially, technical analysis uses only two moving average algorithms - simple (sma) and exponential (ema). SMA is always calculated the same way. EMA is also calculated consistently, but there can be variations in how it uses the period (smoothing coefficient calculation) and how it's initialized. This is what distinguishes the different ema types supported by py-ta.
+Essentially, technical analysis uses only two moving average algorithms - simple (sma) and exponential (ema). SMA is always calculated the same way. EMA is also calculated consistently, but there can be variations in how it uses the period (smoothing coefficient calculation) and how it's initialized. This is what distinguishes the different ema types supported by pyita.
 
 **Usage example:**
 
@@ -369,5 +369,5 @@ Copyright (c) 2022 Aleksandr Kuznetsov hal@hal9000.cc
 
 ## Contact
 
-- **GitHub Issues**: https://github.com/hal9000cc/py_ta/issues
+- **GitHub Issues**: https://github.com/hal9000cc/pyita/issues
 - **Email**: hal@hal9000.cc

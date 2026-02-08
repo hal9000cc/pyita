@@ -1,7 +1,7 @@
 """Tests for ZigZag indicator."""
 import numpy as np
 import pytest
-import py_ta as ta
+import pyita as ta
 
 from conftest import TEST_DATA_FILENAME, arrays_equal_with_nan
 from stock_indicators_helpers import get_si_ref
@@ -18,7 +18,7 @@ def test_zigzag_vs_si(test_ohlcv_data, delta, type_param):
     This test:
     1. Loads test OHLCV data
     2. Creates Quotes object
-    3. Calculates ZigZag using py-ta (with and without end_points)
+    3. Calculates ZigZag using pyita (with and without end_points)
     4. Verifies that ZigZag pivot types match stock-indicators
     5. Allows up to 2% difference due to algorithm differences
     

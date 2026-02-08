@@ -1,10 +1,10 @@
-"""py-ta: Technical analysis library for stock quotes.
+"""pyita: Technical analysis library for stock quotes.
 
 This module provides technical indicators for analyzing stock market data.
 Indicators are loaded lazily when first accessed.
 
 Example:
-    >>> import py_ta as ta
+    >>> import pyita as ta
     >>> quotes = ta.Quotes(open, high, low, close)
     >>> bb = ta.bollinger_bands(quotes, period=20)
     >>> sma = ta.sma(quotes, period=20)
@@ -28,7 +28,7 @@ def _get_version():
     # Try to get version from installed package metadata
     try:
         from importlib.metadata import version
-        return version('py-ta')
+        return version('pyita')
     except Exception:
         pass
     

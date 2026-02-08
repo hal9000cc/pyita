@@ -4,14 +4,14 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "pyita"
-version = "1.0.6"
+version = "1.0.7"
 description = "Technical analysis library for stock quotes"
 readme = "README.md"
 license = {text = "MIT"}
 authors = [
     {name = "Aleksandr Kuznetsov", email = "hal@hal9000.cc"}
 ]
-requires-python = ">=3.8"
+requires-python = ">=3.9"
 keywords = [
     "technical-analysis",
     "trading",
@@ -60,7 +60,6 @@ classifiers = [
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
@@ -69,9 +68,9 @@ classifiers = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/hal9000cc/py_ta"
-Repository = "https://github.com/hal9000cc/py_ta"
-Issues = "https://github.com/hal9000cc/py_ta/issues"
+Homepage = "https://github.com/hal9000cc/pyita"
+Repository = "https://github.com/hal9000cc/pyita"
+Issues = "https://github.com/hal9000cc/pyita/issues"
 
 [project.optional-dependencies]
 dev = [
