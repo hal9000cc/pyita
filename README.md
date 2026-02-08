@@ -365,7 +365,7 @@ pytest tests/
 
 MIT License
 
-Copyright (c) 2022 Aleksandr Kuznetsov hal@hal9000.cc
+Copyright (c) 2026 Aleksandr Kuznetsov hal@hal9000.cc
 
 ## Contact
 
