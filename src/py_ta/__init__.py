@@ -82,15 +82,12 @@ def __getattr__(name):
     if name in ('__bases__', '__test__'):
         return None
 
-    # Skip special Python attributes (dunder attributes)
     if name.startswith('__') and name.endswith('__'):
         raise AttributeError(f"module '{__name__}' has no attribute '{name}'")
     
-    # Check cache first
     if name in _indicator_cache:
         return _indicator_cache[name]
     
-    # Try to import the indicator module
     try:
         module = importlib.import_module(f'.indicators.{name}', __package__)
         func = module.get_indicator_out

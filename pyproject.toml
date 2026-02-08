@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "py-ta"
-version = "1.0.0"
+version = "1.0.1"
 description = "Technical analysis library for stock quotes"
 readme = "README.md"
 license = {text = "MIT"}
@@ -12,6 +12,44 @@ authors = [
     {name = "Aleksandr Kuznetsov", email = "hal@hal9000.cc"}
 ]
 requires-python = ">=3.8"
+keywords = [
+    "technical-analysis",
+    "trading",
+    "stocks",
+    "cryptocurrency",
+    "crypto",
+    "indicators",
+    "finance",
+    "numpy",
+    "numba",
+    "rsi",
+    "macd",
+    "bollinger-bands",
+    "ema",
+    "sma",
+    "atr",
+    "adx",
+    "stochastic",
+    "williams-r",
+    "cci",
+    "mfi",
+    "obv",
+    "vwap",
+    "vwma",
+    "roc",
+    "trix",
+    "tema",
+    "aroon",
+    "ichimoku",
+    "keltner-channels",
+    "parabolic-sar",
+    "supertrend",
+    "chandelier",
+    "zigzag",
+    "volume-oscillator",
+    "awesome-oscillator",
+    "adl",
+]
 dependencies = [
     "numpy>=1.21.0",
     "numba>=0.56.0",
@@ -20,6 +58,7 @@ classifiers = [
     "Development Status :: 3 - Alpha",
     "Intended Audience :: Developers",
     "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
@@ -28,6 +67,11 @@ classifiers = [
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
 ]
+
+[project.urls]
+Homepage = "https://github.com/hal9000cc/py_ta"
+Repository = "https://github.com/hal9000cc/py_ta"
+Issues = "https://github.com/hal9000cc/py_ta/issues"
 
 [project.optional-dependencies]
 dev = [
