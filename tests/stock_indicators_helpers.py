@@ -62,25 +62,39 @@ def get_si_ref(quotes_filename, si_func_name, *args):
     Args:
         quotes_filename: Name of quotes pickle file (e.g. 'BINANCE_BTC_USDT_1h_2025.pkl')
         si_func_name: Name of stock-indicators function (e.g. 'get_adx')
-        *args: Positional arguments to pass to the indicator function
+        *args: Positional arguments to pass to the indicator function.
+               String values for enum types (e.g., 'HIGH_LOW', 'SHORT', 'LONG')
+               will be automatically converted to enum objects when generating data.
 
     Returns:
         IndicatorResult: Object with attribute access to numpy arrays
     """
     cache_path = _build_cache_path(quotes_filename, si_func_name, args)
 
+    # If cache exists, load from cache (no need for stock-indicators)
     if cache_path.exists():
         with open(cache_path, 'rb') as f:
             return IndicatorResult(pickle.load(f))
 
+    # Cache doesn't exist - need to generate it using stock-indicators
+    # Convert string enum arguments to enum objects before calling stock-indicators
+    converted_args = _convert_args_to_enums(si_func_name, args)
+    
+    # Import here to avoid requiring stock-indicators as a dependency
+    try:
+        from stock_indicators import indicators as si
+    except ImportError:
+        raise ImportError(
+            "stock-indicators is required to generate reference data. "
+            "Install it with: pip install stock-indicators"
+        )
+
     with open(TEST_DATA_DIR / quotes_filename, 'rb') as f:
         quotes_data = pickle.load(f)
 
-    from stock_indicators import indicators as si
-
     func = getattr(si, si_func_name)
     si_quotes = _dict_to_si_quotes(quotes_data)
-    results = func(si_quotes, *args)
+    results = func(si_quotes, *converted_args)
     data_dict = _extract_all_attrs(results)
 
     with open(cache_path, 'wb') as f:
@@ -108,6 +122,10 @@ def _build_cache_path(quotes_filename, si_func_name, args):
 
 
 def _dict_to_si_quotes(data_dict):
+    """Convert dictionary to stock-indicators Quote objects.
+    
+    Imports stock-indicators only when needed.
+    """
     from stock_indicators import Quote
 
     time = data_dict['time']
@@ -130,7 +148,47 @@ def _dict_to_si_quotes(data_dict):
     return result
 
 
+def _convert_args_to_enums(si_func_name, args):
+    """Convert string enum arguments to enum objects.
+    
+    Only converts when needed for data generation. This allows tests to pass
+    strings instead of enum objects, avoiding stock-indicators import when cache exists.
+    
+    Args:
+        si_func_name: Name of stock-indicators function
+        args: Original arguments (may contain strings for enum types)
+        
+    Returns:
+        tuple: Arguments with enum strings converted to enum objects
+    """
+    args_list = list(args)
+    
+    if si_func_name == 'get_zig_zag':
+        # First argument after quotes is EndType
+        if len(args_list) > 0 and isinstance(args_list[0], str):
+            try:
+                from stock_indicators.indicators.common.enums import EndType
+                args_list[0] = getattr(EndType, args_list[0])
+            except (ImportError, AttributeError):
+                pass  # If stock-indicators not available, will fail later
+    
+    elif si_func_name == 'get_chandelier':
+        # Last argument is ChandelierType
+        if len(args_list) > 0 and isinstance(args_list[-1], str):
+            try:
+                from stock_indicators.indicators.common.enums import ChandelierType
+                args_list[-1] = getattr(ChandelierType, args_list[-1])
+            except (ImportError, AttributeError):
+                pass  # If stock-indicators not available, will fail later
+    
+    return tuple(args_list)
+
+
 def _extract_all_attrs(results):
+    """Extract all attributes from stock-indicators results.
+    
+    Handles both numeric and string values (e.g., point_type in ZigZag).
+    """
     result_class = type(results[0])
     attrs = [
         name for name in dir(result_class)
@@ -141,10 +199,26 @@ def _extract_all_attrs(results):
     n = len(results)
     data_dict = {}
     for attr in attrs:
-        arr = np.empty(n, dtype=np.float64)
-        for i, r in enumerate(results):
+        # Determine dtype by checking first non-None value
+        dtype = np.float64
+        for r in results:
             val = getattr(r, attr)
-            arr[i] = np.nan if val is None else float(val)
+            if val is not None:
+                if isinstance(val, str):
+                    dtype = object
+                break
+        
+        if dtype == object:
+            arr = np.empty(n, dtype=object)
+            for i, r in enumerate(results):
+                val = getattr(r, attr)
+                arr[i] = None if val is None else val
+        else:
+            arr = np.empty(n, dtype=np.float64)
+            for i, r in enumerate(results):
+                val = getattr(r, attr)
+                arr[i] = np.nan if val is None else float(val)
         data_dict[attr] = arr
 
     return data_dict
+

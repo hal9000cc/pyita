@@ -10,6 +10,8 @@ Example:
     >>> sma = ta.sma(quotes, period=20)
 """
 import importlib
+import re
+from pathlib import Path
 
 from .quotes import Quotes
 from .exceptions import (
@@ -20,7 +22,32 @@ from .exceptions import (
     PyTAExceptionDataSeriesNonFound,
 )
 
-__version__ = "0.1.0"
+
+def _get_version():
+    """Get version from package metadata or pyproject.toml."""
+    # Try to get version from installed package metadata
+    try:
+        from importlib.metadata import version
+        return version('py-ta')
+    except Exception:
+        pass
+    
+    # Fallback: read from pyproject.toml (for development)
+    try:
+        pyproject_path = Path(__file__).parent.parent.parent / 'pyproject.toml'
+        if pyproject_path.exists():
+            content = pyproject_path.read_text(encoding='utf-8')
+            match = re.search(r'^version\s*=\s*["\']([^"\']+)["\']', content, re.MULTILINE)
+            if match:
+                return match.group(1)
+    except Exception:
+        pass
+    
+    # Final fallback
+    return "1.0.0"
+
+
+__version__ = _get_version()
 __all__ = [
     'Quotes',
     'PyTAException',

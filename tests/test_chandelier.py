@@ -1,7 +1,6 @@
 """Tests for Chandelier Exit indicator."""
 import pytest
 import py_ta as ta
-from stock_indicators.indicators.common.enums import ChandelierType
 
 from conftest import TEST_DATA_FILENAME, arrays_equal_with_nan
 from stock_indicators_helpers import get_si_ref
@@ -24,8 +23,9 @@ def test_chandelier_vs_si(test_ohlcv_data, period, multiplier):
 
     chandelier_result = ta.chandelier(quotes, period=period, multiplier=multiplier, use_close=False)
 
-    ref_short = get_si_ref(TEST_DATA_FILENAME, 'get_chandelier', period, multiplier, ChandelierType.SHORT)
-    ref_long = get_si_ref(TEST_DATA_FILENAME, 'get_chandelier', period, multiplier, ChandelierType.LONG)
+    # Pass strings instead of enum - conversion happens inside get_si_ref only when generating data
+    ref_short = get_si_ref(TEST_DATA_FILENAME, 'get_chandelier', period, multiplier, 'SHORT')
+    ref_long = get_si_ref(TEST_DATA_FILENAME, 'get_chandelier', period, multiplier, 'LONG')
 
     assert arrays_equal_with_nan(
         chandelier_result.exit_short[200:], ref_short.chandelier_exit[200:]
