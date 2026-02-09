@@ -2,7 +2,7 @@
 
 ![PyPI - Version](https://img.shields.io/pypi/v/pyita)
 ![PyPI - License](https://img.shields.io/pypi/l/pyita)
-![Python Version from PEP 621 TOML](https://img.shields.io/python/required-version-toml?projectUrl=https://github.com/hal9000cc/pyita)
+![PyPI - Python Version](https://img.shields.io/pypi/pyversions/pyita)
 
 **pyita** is a simple and fast technical analysis library for Python, written in pure Python with NumPy and Numba for maximum performance. It is ideal for Python-based financial market analysis, algorithmic trading, and working with data from any source.
 
