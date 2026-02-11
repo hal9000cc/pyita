@@ -2,7 +2,7 @@
 
 Simple moving average.
 
-Output series: sma"""
+Output series: sma (as source)"""
 from ..indicator_result import IndicatorResult
 from ..move_average import ma_calculate, MA_Type
 from ..exceptions import PyTAExceptionBadParameterValue

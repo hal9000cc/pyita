@@ -2,7 +2,7 @@
 
 Volume Weighted Average Price.
 
-Output series: vwap"""
+Output series: vwap (price)"""
 import numpy as np
 
 from ..indicator_result import IndicatorResult

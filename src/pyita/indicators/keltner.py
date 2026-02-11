@@ -2,7 +2,7 @@
 
 Keltner channel.
 
-Output series: mid_line, up_line, down_line, width"""
+Output series: mid_line (price), up_line (price), down_line (price), width"""
 import numpy as np
 
 from ..indicator_result import IndicatorResult

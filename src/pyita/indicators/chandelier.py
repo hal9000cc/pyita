@@ -2,7 +2,7 @@
 
 Chandelier Exit.
 
-Output series: exit_short, exit_long"""
+Output series: exit_short (price), exit_long (price)"""
 import numpy as np
 import numba as nb
 

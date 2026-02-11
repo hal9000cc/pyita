@@ -2,7 +2,7 @@
 
 Ichimoku indicator.
 
-Output series: tenkan, kijun, senkou_a, senkou_b, chikou"""
+Output series: tenkan (price), kijun (price), senkou_a (price), senkou_b (price), chikou (price)"""
 import numpy as np
 import numba as nb
 

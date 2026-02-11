@@ -2,7 +2,13 @@ import abc
 from datetime import date, datetime
 
 import numpy as np
-import pandas as pd
+
+try:
+    import pandas as pd
+    HAS_PANDAS = True
+except ImportError:
+    HAS_PANDAS = False
+    pd = None
 
 from .exceptions import PyTAExceptionBadParameterValue, PyTAExceptionBadSeriesData, PyTAExceptionDataSeriesNonFound
 
@@ -51,7 +57,14 @@ class DataSeries(abc.ABC):
         # Process arguments
         if len(args) == 1 and hasattr(args[0], 'columns'):
             # Pandas DataFrame
+            if not HAS_PANDAS:
+                raise PyTAExceptionBadParameterValue(
+                    "pandas is required to process DataFrame. Install it with: pip install pandas"
+                )
             self._process_pandas_dataframe(args[0])
+        elif len(args) == 1 and self._is_ccxt_format(args[0]):
+            # CCXT format: list of lists [[timestamp, open, high, low, close, volume], ...]
+            self._process_ccxt_format(args[0])
         else:
             # Process positional arguments
             column_names = ['open', 'high', 'low', 'close', 'volume', 'time']
@@ -175,18 +188,74 @@ class DataSeries(abc.ABC):
             return np.datetime64(dt, unit)
         elif isinstance(value, np.datetime64):
             return value.astype(f'datetime64[{unit}]')
-        elif isinstance(value, pd.Timestamp):
+        elif HAS_PANDAS and isinstance(value, pd.Timestamp):
             return np.datetime64(value, unit)
         else:
             # Try to convert as timestamp
             return np.datetime64(value, unit)
+    
+    def _is_ccxt_format(self, data):
+        """Check if data is in CCXT format (list of lists).
+        
+        Args:
+            data: Data to check
+            
+        Returns:
+            bool: True if data is in CCXT format (list of lists), False otherwise
+        """
+        if not isinstance(data, (list, tuple)):
+            return False
+        if len(data) == 0:
+            return False
+        if not isinstance(data[0], (list, tuple)):
+            return False
+        return True
+    
+    def _process_ccxt_format(self, ohlcv_list):
+        """Process CCXT format: list of lists [[timestamp, open, high, low, close, volume], ...].
+        
+        Args:
+            ohlcv_list: List of lists in CCXT format
+                Each inner list: [timestamp, open, high, low, close, volume]
+        """
+        if not ohlcv_list:
+            raise PyTAExceptionBadSeriesData("CCXT format list cannot be empty")
+        
+        # Extract columns from CCXT format
+        # Format: [[timestamp, open, high, low, close, volume], ...]
+        time_data = [row[0] for row in ohlcv_list]
+        open_data = [row[1] for row in ohlcv_list]
+        high_data = [row[2] for row in ohlcv_list]
+        low_data = [row[3] for row in ohlcv_list]
+        close_data = [row[4] for row in ohlcv_list]
+        
+        # Add required columns
+        self._add_data('open', open_data)
+        self._add_data('high', high_data)
+        self._add_data('low', low_data)
+        self._add_data('close', close_data)
+        
+        # Add optional columns if present
+        if len(ohlcv_list[0]) >= 6:
+            volume_data = [row[5] for row in ohlcv_list]
+            self._add_data('volume', volume_data)
+        
+        if len(ohlcv_list[0]) >= 1:
+            self._add_data('time', time_data)
     
     def _process_pandas_dataframe(self, df):
         """Process pandas DataFrame and extract columns.
         
         Args:
             df: pandas DataFrame with OHLCV columns (case-insensitive matching)
+            
+        Raises:
+            PyTAExceptionBadParameterValue: If pandas is not installed
         """
+        if not HAS_PANDAS:
+            raise PyTAExceptionBadParameterValue(
+                "pandas is required to process DataFrame. Install it with: pip install pandas"
+            )
         # Column name mapping (case-insensitive)
         column_mapping = {}
         df_columns_lower = {col.lower(): col for col in df.columns}

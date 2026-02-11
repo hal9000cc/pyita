@@ -84,7 +84,30 @@ def _parse_docstring(indicator_name, docstring):
     if output_series_text.endswith(')'):
         output_series_text = output_series_text[:-1]
     
-    output_series = [s.strip() for s in output_series_text.split(',') if s.strip()]
+    output_series = []
+    for series_item in output_series_text.split(','):
+        series_item = series_item.strip()
+        if not series_item:
+            continue
+        
+        # Parse format: "name (type)" or just "name"
+        type_match = re.match(r'(\w+)\s*\(([^)]+)\)', series_item)
+        if type_match:
+            series_name = type_match.group(1)
+            series_type = type_match.group(2).strip()
+            # Normalize type: "as source" -> "as_source"
+            if series_type == 'as source':
+                series_type = 'as_source'
+            elif series_type not in ('price', 'as_source'):
+                series_type = 'none'
+        else:
+            series_name = series_item
+            series_type = 'none'
+        
+        output_series.append({
+            'name': series_name,
+            'type': series_type
+        })
     
     signature_match = re.match(r'(\w+)\((.*?)\)', signature_line)
     if not signature_match:
@@ -208,8 +231,20 @@ def list():
         meta = metadata_dict[indicator_name]
         lines.append(meta['signature'])
         lines.append(f"  {meta['description']}.")
-        output_series = ', '.join(meta['output_series'])
-        lines.append(f"  Output: {output_series}")
+        
+        # Format output series with types in parentheses
+        output_series_formatted = []
+        for series in meta['output_series']:
+            series_name = series['name']
+            series_type = series['type']
+            if series_type == 'none':
+                output_series_formatted.append(series_name)
+            else:
+                # Convert 'as_source' back to 'as source' for display
+                display_type = 'as source' if series_type == 'as_source' else series_type
+                output_series_formatted.append(f"{series_name} ({display_type})")
+        
+        lines.append(f"  Output: {', '.join(output_series_formatted)}")
         lines.append('')
     
     return '\n'.join(lines)

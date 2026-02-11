@@ -361,7 +361,12 @@ Output:
     'name': 'bollinger_bands',
     'signature': 'bollinger_bands(quotes, period=20, deviation=2, ma_type=\'sma\', value=\'close\')',
     'parameters': ['quotes', 'period', 'deviation', 'ma_type', 'value'],
-    'output_series': ['mid_line', 'up_line', 'down_line', 'z_score'],
+    'output_series': [
+        {'name': 'mid_line', 'type': 'price'},
+        {'name': 'up_line', 'type': 'price'},
+        {'name': 'down_line', 'type': 'price'},
+        {'name': 'z_score', 'type': 'none'}
+    ],
     'description': 'Bollinger bands'
 }
 ```
@@ -384,8 +389,23 @@ adx(quotes, period=14, smooth=14, ma_type='mma')
   Average directional movement index.
   Output: adx, p_di, m_di
 
+bollinger_bands(quotes, period=20, deviation=2, ma_type='sma', value='close')
+  Bollinger bands.
+  Output: mid_line (price), up_line (price), down_line (price), z_score
+
+ema(quotes, period, value='close')
+  Exponential moving average.
+  Output: ema (as source)
+
 ...
 ```
+
+**Series Types:**
+
+In the output series, types are indicated in parentheses:
+- **`(price)`** - Price-based series that are displayed on the price chart (e.g., moving averages, channel lines)
+- **`(as source)`** - Series whose type depends on the source data (e.g., `ma` can be calculated on price or volume)
+- **No type** - Value-based series displayed on separate charts (e.g., oscillators, indices, signals)
 
 ## System Requirements
 

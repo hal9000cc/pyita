@@ -11,6 +11,7 @@ class Quotes(DataSeries):
     - Quotes(open, high, low, close, volume)
     - Quotes(open, high, low, close, volume, time)
     - Quotes(pandas_dataframe)
+    - Quotes(ccxt_ohlcv_list)  # [[timestamp, open, high, low, close, volume], ...]
     - Quotes(**{'open': ..., 'high': ..., ...})
     
     Attributes:
@@ -60,6 +61,7 @@ class Quotes(DataSeries):
                 - (open, high, low, close, volume)
                 - (open, high, low, close, volume, time)
                 - (pandas_dataframe,)
+                - (ccxt_ohlcv_list,)  # [[timestamp, open, high, low, close, volume], ...]
             **kwargs: Named arguments for explicit initialization
         
         Raises:

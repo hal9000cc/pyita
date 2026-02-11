@@ -4,8 +4,14 @@ from datetime import date, datetime
 from pathlib import Path
 
 import numpy as np
-import pandas as pd
 import pytest
+
+try:
+    import pandas as pd
+    HAS_PANDAS = True
+except ImportError:
+    HAS_PANDAS = False
+    pd = None
 
 import pyita as ta
 from pyita.exceptions import PyTAExceptionBadSeriesData
@@ -236,7 +242,7 @@ def test_quotes_from_float_lists_datetime(test_data_100):
     volume_list = test_data_100['volume'].tolist()
     
     # Convert time to Python datetime
-    time_datetime = [pd.Timestamp(ts).to_pydatetime() for ts in test_data_100['time']]
+    time_datetime = [ts.astype(datetime) for ts in test_data_100['time']]
     
     quotes = ta.Quotes(open_list, high_list, low_list, close_list, volume_list, time_datetime)
     
@@ -263,7 +269,7 @@ def test_quotes_from_int_lists_date(test_data_1d_100):
     volume_list = [int(x) for x in test_data_1d_100['volume']]
     
     # Convert time to Python date (start of day)
-    time_date = [pd.Timestamp(ts).date() for ts in test_data_1d_100['time']]
+    time_date = [ts.astype('datetime64[D]').astype(date) for ts in test_data_1d_100['time']]
     
     quotes = ta.Quotes(open_list, high_list, low_list, close_list, volume_list, time_date)
     
@@ -283,6 +289,7 @@ def test_quotes_from_int_lists_date(test_data_1d_100):
     assert_quotes_equal(quotes, expected)
 
 
+@pytest.mark.skipif(not HAS_PANDAS, reason="Requires pandas")
 def test_quotes_from_pandas_4_columns(test_data_100):
     """Test Quotes creation from pandas DataFrame with 4 columns (mixed case)."""
     df = pd.DataFrame({
@@ -304,6 +311,7 @@ def test_quotes_from_pandas_4_columns(test_data_100):
     assert_quotes_equal(quotes, expected)
 
 
+@pytest.mark.skipif(not HAS_PANDAS, reason="Requires pandas")
 def test_quotes_from_pandas_5_columns(test_data_100):
     """Test Quotes creation from pandas DataFrame with 5 columns (mixed case)."""
     df = pd.DataFrame({
@@ -327,6 +335,7 @@ def test_quotes_from_pandas_5_columns(test_data_100):
     assert_quotes_equal(quotes, expected)
 
 
+@pytest.mark.skipif(not HAS_PANDAS, reason="Requires pandas")
 def test_quotes_from_pandas_6_columns(test_data_100):
     """Test Quotes creation from pandas DataFrame with 6 columns (mixed case)."""
     df = pd.DataFrame({
@@ -364,6 +373,7 @@ def test_quotes_validation_different_lengths(test_data_100):
         ta.Quotes(open_data, high_data, low_data, close_data)
 
 
+@pytest.mark.skipif(not HAS_PANDAS, reason="Requires pandas")
 def test_quotes_validation_missing_columns(test_data_100):
     """Test Quotes validation with missing required columns in pandas DataFrame."""
     # Missing 'close' column
@@ -376,6 +386,76 @@ def test_quotes_validation_missing_columns(test_data_100):
     
     with pytest.raises(PyTAExceptionBadSeriesData):
         ta.Quotes(df)
+
+
+def test_quotes_from_ccxt_format(test_data_100):
+    """Test Quotes creation from CCXT format (list of lists)."""
+    # Convert test data to CCXT format: [[timestamp, open, high, low, close, volume], ...]
+    ccxt_data = []
+    for i in range(len(test_data_100['open'])):
+        # Convert numpy.datetime64 to timestamp in milliseconds
+        timestamp_ms = int(test_data_100['time'][i].astype('datetime64[ms]').astype('int64'))
+        ccxt_data.append([
+            timestamp_ms,
+            float(test_data_100['open'][i]),
+            float(test_data_100['high'][i]),
+            float(test_data_100['low'][i]),
+            float(test_data_100['close'][i]),
+            float(test_data_100['volume'][i]),
+        ])
+    
+    quotes = ta.Quotes(ccxt_data)
+    
+    expected = {
+        'open': test_data_100['open'],
+        'high': test_data_100['high'],
+        'low': test_data_100['low'],
+        'close': test_data_100['close'],
+        'volume': test_data_100['volume'],
+        'time': test_data_100['time'],
+    }
+    
+    assert_quotes_equal(quotes, expected)
+
+
+@pytest.mark.skipif(True, reason="Requires ccxt library and internet connection")
+def test_quotes_from_ccxt_exchange():
+    """Test Quotes creation from actual CCXT exchange data."""
+    import ccxt
+    
+    exchange = ccxt.binance()
+    symbol = 'BTC/USDT'
+    timeframe = '1h'
+    
+    # Fetch data from exchange
+    ohlcv = exchange.fetch_ohlcv(symbol, timeframe, limit=10)
+    
+    # Create Quotes from CCXT data
+    quotes = ta.Quotes(ohlcv)
+    
+    # Verify basic structure
+    assert len(quotes.close) == 10
+    assert quotes.open is not None
+    assert quotes.high is not None
+    assert quotes.low is not None
+    assert quotes.close is not None
+    assert quotes.volume is not None
+    assert quotes.time is not None
+    
+    # Verify data types
+    assert quotes.open.dtype == np.float64
+    assert quotes.high.dtype == np.float64
+    assert quotes.low.dtype == np.float64
+    assert quotes.close.dtype == np.float64
+    assert quotes.volume.dtype == np.float64
+    assert quotes.time.dtype == np.dtype('datetime64[ms]')
+    
+    # Verify data consistency (high >= low, high >= open, high >= close, etc.)
+    assert np.all(quotes.high >= quotes.low)
+    assert np.all(quotes.high >= quotes.open)
+    assert np.all(quotes.high >= quotes.close)
+    assert np.all(quotes.low <= quotes.open)
+    assert np.all(quotes.low <= quotes.close)
 
 
 class TestQuotesWriteable:

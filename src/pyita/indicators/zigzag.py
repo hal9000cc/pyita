@@ -2,7 +2,7 @@
 
 Zig-zag indicator (pivots).
 
-Output series: pivots, pivot_types"""
+Output series: pivots (price), pivot_types"""
 import numpy as np
 import numba as nb
 

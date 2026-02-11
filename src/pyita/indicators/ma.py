@@ -2,7 +2,7 @@
 
 Moving average of different types: 'sma', 'ema', 'mma', 'ema0', 'mma0', 'emaw', 'mmaw'.
 
-Output series: move_average"""
+Output series: move_average (as source)"""
 from ..indicator_result import IndicatorResult
 from ..move_average import ma_calculate, MA_Type
 from ..exceptions import PyTAExceptionBadParameterValue, PyTAExceptionTooLittleData

@@ -2,7 +2,7 @@
 
 Supertrend indicator.
 
-Output series: supertrend, supertrend_mid"""
+Output series: supertrend (price), supertrend_mid (price)"""
 import numpy as np
 import numba as nb
 

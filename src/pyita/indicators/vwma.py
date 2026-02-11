@@ -2,7 +2,7 @@
 
 Volume Weighted Moving Average.
 
-Output series: vwma"""
+Output series: vwma (price)"""
 import numpy as np
 import numba as nb
 

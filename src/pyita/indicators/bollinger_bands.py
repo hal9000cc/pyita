@@ -2,7 +2,7 @@
 
 Bollinger bands.
 
-Output series: mid_line, up_line, down_line, z_score"""
+Output series: mid_line (price), up_line (price), down_line (price), z_score"""
 
 import numpy as np
 import numba as nb
