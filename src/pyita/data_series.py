@@ -246,20 +246,123 @@ class DataSeries(abc.ABC):
                 raise PyTAExceptionBadSeriesData(f"Arrays have different lengths: {length_details}")
     
     def __getitem__(self, key):
-        """Get data series by key using bracket notation.
+        """Get data series by key using bracket notation or slice.
         
         Args:
-            key: Series name (e.g., 'open', 'close', 'volume')
+            key: Can be:
+                - String: Series name (e.g., 'open', 'close', 'volume')
+                - slice: Slice object (e.g., slice(1, 10), slice(None, 10))
+                - int: Index (returns object with single element)
             
         Returns:
-            Value from internal dictionary
+            If key is string: Value from internal dictionary (numpy array)
+            If key is slice/int: New DataSeries object with sliced data
             
         Raises:
-            PyTAExceptionDataSeriesNonFound: If series not found
+            PyTAExceptionDataSeriesNonFound: If series name not found
+            IndexError: If int index is out of range
         """
-        if key not in self._data:
-            raise PyTAExceptionDataSeriesNonFound(key)
-        return self._data[key]
+        if isinstance(key, str):
+            if key not in self._data:
+                raise PyTAExceptionDataSeriesNonFound(key)
+            return self._data[key]
+        
+        if isinstance(key, (slice, int)):
+            return self._create_sliced(key)
+        
+        raise TypeError(f"Unsupported key type: {type(key).__name__}")
+    
+    def _create_sliced(self, key):
+        """Create a new DataSeries object with sliced data.
+        
+        Args:
+            key: slice object or int index
+            
+        Returns:
+            New DataSeries object (same type as self) with sliced arrays
+            
+        Raises:
+            IndexError: If int index is out of range
+        """
+        if not self._data:
+            return self._create_empty()
+        
+        first_array = next(iter(self._data.values()))
+        data_len = len(first_array)
+        
+        if isinstance(key, int):
+            if key < 0:
+                key = data_len + key
+            if key < 0 or key >= data_len:
+                raise IndexError(f"Index {key} is out of range for length {data_len}")
+            key = slice(key, key + 1)
+        
+        sliced_data = {}
+        for col_name, arr in self._data.items():
+            sliced_data[col_name] = arr[key]
+        
+        return self._create_from_dict(sliced_data)
+    
+    def _create_empty(self):
+        """Create an empty DataSeries object of the same type.
+        
+        Returns:
+            New empty DataSeries object (same type as self)
+        """
+        return self._create_from_dict({})
+    
+    def _create_from_dict(self, data_dict):
+        """Create a new DataSeries object from a dictionary of arrays.
+        
+        This method should be overridden in subclasses for optimal performance.
+        Default implementation creates object and sets attributes directly.
+        
+        Args:
+            data_dict: Dictionary of column names to numpy arrays
+            
+        Returns:
+            New DataSeries object (same type as self)
+        """
+        # Create new instance without calling __init__
+        new_obj = type(self).__new__(type(self))
+        
+        # Set attributes directly (bypass validation since data is already valid)
+        new_obj._data = data_dict
+        new_obj._column_types = self._column_types
+        
+        return new_obj
+    
+    @property
+    def writeable(self):
+        """Get writeable flag from first array.
+        
+        Returns:
+            bool or None: Writeable flag of first array, or None if object is empty
+            
+        Example:
+            >>> quotes = Quotes(open, high, low, close)
+            >>> print(quotes.writeable)
+            True
+        """
+        if not self._data:
+            return None
+        first_array = next(iter(self._data.values()))
+        return first_array.flags.writeable
+    
+    @writeable.setter
+    def writeable(self, value):
+        """Set writeable flag for all arrays.
+        
+        Args:
+            value: Boolean value to set for writeable flag
+            
+        Example:
+            >>> quotes = Quotes(open, high, low, close)
+            >>> quotes.writeable = False
+            >>> quotes.close[0] = 999  # Will raise ValueError
+        """
+        for arr in self._data.values():
+            arr.flags.writeable = value
     
     def __getattr__(self, name):
         """Get attribute from internal data dictionary.

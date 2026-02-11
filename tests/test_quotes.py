@@ -377,3 +377,65 @@ def test_quotes_validation_missing_columns(test_data_100):
     with pytest.raises(PyTAExceptionBadSeriesData):
         ta.Quotes(df)
 
+
+class TestQuotesWriteable:
+    """Tests for Quotes writeable property."""
+    
+    def test_writeable_default(self, test_data_100):
+        """Test that newly created Quotes is writeable by default."""
+        quotes = ta.Quotes(
+            test_data_100['open'],
+            test_data_100['high'],
+            test_data_100['low'],
+            test_data_100['close']
+        )
+        
+        assert quotes.writeable is True
+        quotes.close[0] = 999.0
+        assert quotes.close[0] == 999.0
+    
+    def test_writeable_set_false(self, test_data_100):
+        """Test setting writeable to False prevents modification."""
+        quotes = ta.Quotes(
+            test_data_100['open'],
+            test_data_100['high'],
+            test_data_100['low'],
+            test_data_100['close']
+        )
+        
+        quotes.writeable = False
+        assert quotes.writeable is False
+        
+        with pytest.raises(ValueError, match="assignment destination is read-only"):
+            quotes.close[0] = 999.0
+    
+    def test_writeable_sliced_object(self, test_data_100):
+        """Test that sliced Quotes object can be modified."""
+        quotes = ta.Quotes(
+            test_data_100['open'],
+            test_data_100['high'],
+            test_data_100['low'],
+            test_data_100['close']
+        )
+        
+        sliced = quotes[1:10]
+        assert sliced.writeable is True
+        sliced.close[0] = 999.0
+        assert sliced.close[0] == 999.0
+    
+    def test_writeable_sliced_set_false(self, test_data_100):
+        """Test setting writeable to False on sliced object prevents modification."""
+        quotes = ta.Quotes(
+            test_data_100['open'],
+            test_data_100['high'],
+            test_data_100['low'],
+            test_data_100['close']
+        )
+        
+        sliced = quotes[1:10]
+        sliced.writeable = False
+        assert sliced.writeable is False
+        
+        with pytest.raises(ValueError, match="assignment destination is read-only"):
+            sliced.close[0] = 999.0
+

@@ -46,6 +46,7 @@ class IndicatorResult(DataSeries):
         
         # Set data directly (bypass DataSeries.__init__ logic)
         self._data = data_dict.copy()
+        self._column_types = None
         
         # Skip validation (REQUIRED_COLUMNS and ALLOWED_COLUMNS are None by default)
 
