@@ -59,4 +59,6 @@ env/
 .DS_Store
 Thumbs.db
 
+# Python version (pyenv)
+.python-version
 
