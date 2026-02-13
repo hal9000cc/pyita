@@ -433,6 +433,20 @@ class DataSeries(abc.ABC):
         for arr in self._data.values():
             arr.flags.writeable = value
     
+    def series_names(self):
+        """Return list of series names.
+        
+        Returns:
+            list: List of series names (column names)
+            
+        Example:
+            >>> quotes = Quotes(open, high, low, close)
+            >>> names = quotes.series_names()
+            >>> print(names)
+            ['open', 'high', 'low', 'close']
+        """
+        return list(self._data.keys())
+    
     def __getattr__(self, name):
         """Get attribute from internal data dictionary.
         
