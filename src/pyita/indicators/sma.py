@@ -34,7 +34,7 @@ def get_indicator_out(quotes, period, value='close'):
     if period <= 0:
         raise PyTAExceptionBadParameterValue(f'period must be greater than 0, got {period}')
     
-    valid_values = ['open', 'high', 'low', 'close']
+    valid_values = ['open', 'high', 'low', 'close', 'volume']
     if value not in valid_values:
         raise PyTAExceptionBadParameterValue(f'value must be one of {valid_values}, got {value}')
     
