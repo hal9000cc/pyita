@@ -9,6 +9,7 @@ from ..indicator_result import IndicatorResult
 from ..move_average import ma_calculate, MA_Type
 from ..exceptions import PyTAExceptionBadParameterValue, PyTAExceptionTooLittleData
 from ..constants import PRICE_TYPE
+from ..helpers import validate_value_par
 
 
 def get_indicator_out(quotes, period=14, ma_period=14, ma_type='sma', value='close'):
@@ -45,9 +46,7 @@ def get_indicator_out(quotes, period=14, ma_period=14, ma_type='sma', value='clo
     if ma_period <= 0:
         raise PyTAExceptionBadParameterValue(f'ma_period must be greater than 0, got {ma_period}')
     
-    valid_values = ['open', 'high', 'low', 'close']
-    if value not in valid_values:
-        raise PyTAExceptionBadParameterValue(f'value must be one of {valid_values}, got {value}')
+    validate_value_par(value, allow_volume=True)
     
     try:
         ma_type_enum = MA_Type.cast(ma_type)

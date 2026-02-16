@@ -13,3 +13,6 @@ TIME_UNITS_IN_ONE_SECOND = 1000
 TIME_UNITS_NAME_FOR_TIMEDELTA = 'milliseconds'
 TIME_UNITS_IN_ONE_DAY = 24 * 60 * 60 * 1000
 
+VALID_PRICE_VALUES = ['open', 'high', 'low', 'close']
+VALID_PRICE_AND_VOLUME_VALUES = ['open', 'high', 'low', 'close', 'volume']
+

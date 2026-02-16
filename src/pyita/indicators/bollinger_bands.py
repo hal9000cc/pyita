@@ -10,6 +10,7 @@ import numba as nb
 from ..indicator_result import IndicatorResult
 from ..move_average import ma_calculate, MA_Type
 from ..exceptions import PyTAExceptionBadParameterValue
+from ..helpers import validate_value_par
 
 
 @nb.njit(cache=True)
@@ -84,9 +85,7 @@ def get_indicator_out(quotes, period=20, deviation=2, deviation_up=None, deviati
         if deviation_down <= 0:
             raise PyTAExceptionBadParameterValue(f'deviation_down must be greater than 0, got {deviation_down}')
     
-    valid_values = ['open', 'high', 'low', 'close']
-    if value not in valid_values:
-        raise PyTAExceptionBadParameterValue(f'value must be one of {valid_values}, got {value}')
+    validate_value_par(value, allow_volume=True)
     
     source_values = quotes[value]
     

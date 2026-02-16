@@ -6,6 +6,7 @@ Output series: macd, signal, hist"""
 from ..indicator_result import IndicatorResult
 from ..move_average import ma_calculate, MA_Type
 from ..exceptions import PyTAExceptionBadParameterValue, PyTAExceptionTooLittleData
+from ..helpers import validate_value_par
 
 
 def get_indicator_out(quotes, period_short, period_long, period_signal,
@@ -56,10 +57,7 @@ def get_indicator_out(quotes, period_short, period_long, period_signal,
     if period_long <= period_short:
         raise PyTAExceptionBadParameterValue(f'period_long ({period_long}) must be greater than period_short ({period_short})')
     
-    # Validate value
-    valid_values = ['open', 'high', 'low', 'close']
-    if value not in valid_values:
-        raise PyTAExceptionBadParameterValue(f'value must be one of {valid_values}, got {value}')
+    validate_value_par(value, allow_volume=True)
     
     # Convert ma_type strings to MA_Type enums (will raise ValueError if invalid)
     try:

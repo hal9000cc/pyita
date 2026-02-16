@@ -8,6 +8,7 @@ import numba as nb
 
 from ..indicator_result import IndicatorResult
 from ..exceptions import PyTAExceptionBadParameterValue, PyTAExceptionTooLittleData, PyTAExceptionDataSeriesNonFound
+from ..helpers import validate_value_par
 
 
 @nb.njit(cache=True)
@@ -66,9 +67,7 @@ def get_indicator_out(quotes, period, value='close'):
     if period <= 0:
         raise PyTAExceptionBadParameterValue(f'period must be greater than 0, got {period}')
     
-    valid_values = ['open', 'high', 'low', 'close']
-    if value not in valid_values:
-        raise PyTAExceptionBadParameterValue(f'value must be one of {valid_values}, got {value}')
+    validate_value_par(value, allow_volume=False)
     
     source_values = quotes[value]
     

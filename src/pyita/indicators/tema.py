@@ -6,6 +6,7 @@ Output series: tema (price)"""
 from ..indicator_result import IndicatorResult
 from ..move_average import ma_calculate, MA_Type
 from ..exceptions import PyTAExceptionBadParameterValue
+from ..helpers import validate_value_par
 
 
 def get_indicator_out(quotes, period, value='close'):
@@ -36,9 +37,7 @@ def get_indicator_out(quotes, period, value='close'):
     if period <= 0:
         raise PyTAExceptionBadParameterValue(f'period must be greater than 0, got {period}')
     
-    valid_values = ['open', 'high', 'low', 'close']
-    if value not in valid_values:
-        raise PyTAExceptionBadParameterValue(f'value must be one of {valid_values}, got {value}')
+    validate_value_par(value, allow_volume=True)
     
     source_values = quotes[value]
     

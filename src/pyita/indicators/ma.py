@@ -6,6 +6,7 @@ Output series: move_average (as source)"""
 from ..indicator_result import IndicatorResult
 from ..move_average import ma_calculate, MA_Type
 from ..exceptions import PyTAExceptionBadParameterValue, PyTAExceptionTooLittleData
+from ..helpers import validate_value_par
 
 
 def get_indicator_out(quotes, period, value='close', ma_type='sma'):
@@ -43,10 +44,7 @@ def get_indicator_out(quotes, period, value='close', ma_type='sma'):
     if period <= 0:
         raise PyTAExceptionBadParameterValue(f'period must be greater than 0, got {period}')
     
-    # Validate value
-    valid_values = ['open', 'high', 'low', 'close', 'volume']
-    if value not in valid_values:
-        raise PyTAExceptionBadParameterValue(f'value must be one of {valid_values}, got {value}')
+    validate_value_par(value, allow_volume=True)
     
     # Convert ma_type string to MA_Type enum (will raise ValueError if invalid)
     try:
