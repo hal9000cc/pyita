@@ -185,6 +185,22 @@ class TestQuotesColumnAccess:
             _ = sample_quotes['nonexistent']
 
 
+class TestDataSeriesLen:
+    """Tests for DataSeries length protocol."""
+
+    def test_quotes_len_returns_row_count(self, sample_quotes):
+        """Test len(quotes) returns number of rows."""
+        assert len(sample_quotes) == 10
+
+    def test_quotes_empty_slice_len_is_zero(self, sample_quotes):
+        """Test len(empty sliced quotes) returns zero."""
+        assert len(sample_quotes[5:5]) == 0
+
+    def test_indicator_result_len_returns_row_count(self, sample_result):
+        """Test len(result) returns number of rows."""
+        assert len(sample_result) == 5
+
+
 class TestQuotesSlicedDataIntegrity:
     """Tests for Quotes sliced data integrity."""
     

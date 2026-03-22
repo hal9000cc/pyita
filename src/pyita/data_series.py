@@ -446,6 +446,13 @@ class DataSeries(abc.ABC):
             ['open', 'high', 'low', 'close']
         """
         return list(self._data.keys())
+
+    def __len__(self):
+        """Return the number of rows in the series."""
+        if not self._data:
+            return 0
+        first_array = next(iter(self._data.values()))
+        return len(first_array)
     
     def __getattr__(self, name):
         """Get attribute from internal data dictionary.
