@@ -15,7 +15,7 @@ def _parse_docstring(indicator_name, docstring):
 
     Описание.
 
-    Output series: серия1, серия2, серия3'''
+    Output series: серия1, серия2 (price) [0..100], серия3 [as source]'''
     
     Args:
         indicator_name: Name of the indicator
@@ -26,7 +26,7 @@ def _parse_docstring(indicator_name, docstring):
             - name: Indicator name
             - signature: Full signature string
             - parameters: List of parameter names
-            - output_series: List of output series names
+            - output_series: List of output series metadata
             - description: Description string
             
     Raises:
@@ -88,6 +88,28 @@ def _parse_docstring(indicator_name, docstring):
         if not series_item:
             continue
         
+        range_value = None
+        range_match = re.search(r'\[([^\]]+)\]\s*$', series_item)
+        if range_match:
+            range_text = range_match.group(1).strip()
+            series_item = series_item[:range_match.start()].strip()
+            if range_text == 'as source':
+                range_value = 'as_source'
+            else:
+                numeric_range_match = re.match(
+                    r'^(-?\d+(?:\.\d+)?)\s*\.\.\s*(-?\d+(?:\.\d+)?)$',
+                    range_text
+                )
+                if numeric_range_match:
+                    min_value = float(numeric_range_match.group(1))
+                    max_value = float(numeric_range_match.group(2))
+                    range_value = {
+                        'min': int(min_value) if min_value.is_integer() else min_value,
+                        'max': int(max_value) if max_value.is_integer() else max_value,
+                    }
+                else:
+                    range_value = None
+        
         # Parse format: "name (type)" or just "name"
         type_match = re.match(r'(\w+)\s*\(([^)]+)\)', series_item)
         if type_match:
@@ -104,7 +126,8 @@ def _parse_docstring(indicator_name, docstring):
         
         output_series.append({
             'name': series_name,
-            'type': series_type
+            'type': series_type,
+            'range': range_value
         })
     
     signature_match = re.match(r'(\w+)\((.*?)\)', signature_line)
@@ -184,7 +207,7 @@ def metadata():
               - name: Indicator name
               - signature: Full signature string
               - parameters: List of parameter names
-              - output_series: List of output series names
+              - output_series: List of output series metadata
               - description: Description string
               
     Raises:
@@ -230,17 +253,25 @@ def list():
         lines.append(meta['signature'])
         lines.append(f"  {meta['description']}.")
         
-        # Format output series with types in parentheses
+        # Format output series with types and ranges
         output_series_formatted = []
         for series in meta['output_series']:
             series_name = series['name']
             series_type = series['type']
+            series_range = series.get('range')
             if series_type == 'none':
-                output_series_formatted.append(series_name)
+                formatted = series_name
             else:
                 # Convert 'as_source' back to 'as source' for display
                 display_type = 'as source' if series_type == 'as_source' else series_type
-                output_series_formatted.append(f"{series_name} ({display_type})")
+                formatted = f"{series_name} ({display_type})"
+            
+            if series_range == 'as_source':
+                formatted = f"{formatted} [as source]"
+            elif isinstance(series_range, dict):
+                formatted = f"{formatted} [{series_range['min']}..{series_range['max']}]"
+            
+            output_series_formatted.append(formatted)
         
         lines.append(f"  Output: {', '.join(output_series_formatted)}")
         lines.append('')

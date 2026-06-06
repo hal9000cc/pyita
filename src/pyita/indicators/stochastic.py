@@ -2,7 +2,7 @@
 
 Stochastic oscillator.
 
-Output series: oscillator, value_k, value_d"""
+Output series: oscillator [0..100], value_k [0..100], value_d [0..100]"""
 import numpy as np
 import numba as nb
 

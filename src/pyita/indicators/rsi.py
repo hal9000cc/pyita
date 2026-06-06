@@ -2,7 +2,7 @@
 
 Relative Strength Index.
 
-Output series: rsi"""
+Output series: rsi [0..100]"""
 import numpy as np
 
 from ..indicator_result import IndicatorResult

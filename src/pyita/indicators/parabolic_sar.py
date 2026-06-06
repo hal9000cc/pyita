@@ -2,7 +2,7 @@
 
 Parabolic SAR.
 
-Output series: sar (price), signal"""
+Output series: sar (price), signal [-1..1]"""
 import numpy as np
 import numba as nb
 

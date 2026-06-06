@@ -2,7 +2,7 @@
 
 Average directional movement index.
 
-Output series: adx, p_di, m_di"""
+Output series: adx [0..100], p_di [0..100], m_di [0..100]"""
 import numpy as np
 
 from ..indicator_result import IndicatorResult

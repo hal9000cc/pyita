@@ -2,7 +2,7 @@
 
 Money flow index.
 
-Output series: mfi"""
+Output series: mfi [0..100]"""
 import numpy as np
 
 from ..indicator_result import IndicatorResult

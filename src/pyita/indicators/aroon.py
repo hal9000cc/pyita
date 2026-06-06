@@ -2,7 +2,7 @@
 
 Aroon oscillator.
 
-Output series: up, down, oscillator"""
+Output series: up [0..100], down [0..100], oscillator [-100..100]"""
 import numpy as np
 import numba as nb
 

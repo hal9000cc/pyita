@@ -2,7 +2,7 @@
 
 Williams %R oscillator.
 
-Output series: williams_r"""
+Output series: williams_r [-100..0]"""
 import numpy as np
 import numba as nb
 
